@@ -1,20 +1,28 @@
 import React, { useState } from 'react';
-import { useStoreActions } from 'easy-peasy';
+import { useStoreActions, useStoreState } from 'easy-peasy';
 import { Button, Card, Form } from 'react-bootstrap';
+import ContentAlert from '../ContentAlert';
 
 const ContentForm = () => {
   const [ title, setTitle ] = useState('');
   const [ body, setBody ] = useState('');
 
   const addContent = useStoreActions(actions => actions.addContent);
+  const { loading } = useStoreState(state => state);
+
+  const handleSubmit = (e) => {
+    e.preventDefault();
+    addContent({ title, body, userId: 1 });
+    setTitle('');
+    setBody('');
+  }
+
   return (
     <Card>
       <Card.Header>Create Post</Card.Header>
       <Card.Body>
-        <Form onSubmit={(e) => {
-          e.preventDefault();
-          addContent({title, body});
-        }}>
+        <ContentAlert/>
+        <Form onSubmit={e => handleSubmit(e)}>
           <Form.Group controlId="formBasic">
             <Form.Label>Title</Form.Label>
             <Form.Control 
@@ -32,7 +40,8 @@ const ContentForm = () => {
               rows="7" 
               placeholder="Enter content body" />
           </Form.Group>
-          <Button 
+          <Button
+            disabled={loading ? true : false} 
             variant="primary" 
             type="submit">
             Post
