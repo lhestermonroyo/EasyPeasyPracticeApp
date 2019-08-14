@@ -35,6 +35,19 @@ export default {
       actions.alertIsOpen(true, 'Error occured while posting a content.', 'danger');
     })
   }),
+  editContent: thunk(async (actions, contentData, contentId) => {
+    actions.loadingBegin();
+    axios
+    .patch(`https://jsonplaceholder.typicode.com/posts/${contentId}`, contentData)
+    .then((res) => {
+      actions.loadingEnd();
+      actions.updatedContent(res.data, contentId);
+    })
+    .catch((err) => {
+      actions.loadingEnd();
+      actions.alertIsOpen(true, 'Error occured while updating a content.', 'danger');
+    })
+  }),
   alertIsOpen: action((state, alertData) => {
     state.alertData = {
       isOpen: alertData[0],
@@ -54,7 +67,11 @@ export default {
   setContents: action((state, contents) => {
     state.contents = contents;
   }),  
-  savedContent: action((state, contentData )=> {
+  savedContent: action((state, contentData) => {
     state.contents = [contentData, ...state.contents];
+  }),
+  updatedContent: action((state, contentData, contentId) => {
+    const filteredContent  = state.contents.filter(content => content.id !== contentId);
+    state.contents = [contentData, ...filteredContent];
   }),
 }

@@ -22,7 +22,7 @@ const ContentForm = () => {
       <Card.Header>Create Post</Card.Header>
       <Card.Body>
         <ContentAlert/>
-        <Form onSubmit={e => handleSubmit(e)}>
+        <Form onSubmit={(e) => handleSubmit(e)}>
           <Form.Group controlId="formBasic">
             <Form.Label>Title</Form.Label>
             <Form.Control 
